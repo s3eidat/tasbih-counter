@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' data: blob:; connect-src 'self' data: blob:; worker-src 'self' blob:; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Tasbih Counter — Digital Tasbih, Dhikr Counter with Targets | S3eidat Tools</title>
+<meta name="description" content="A simple digital tasbih: tap or press Space to count, targets of 33, 99 or 100 with a gentle vibration, dhikr in Arabic with transliteration and meaning, several saved counters and daily totals. Free, private, no sign-up.">
+<meta property="og:title" content="Tasbih Counter — المسبحة الإلكترونية">
+<meta property="og:description" content="Tap to count your dhikr, with targets, vibration and daily totals. Runs 100% in your browser.">
+<link rel="icon" href="kit/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="kit/kit.css">
+<link rel="stylesheet" href="app.css">
+<script src="kit/kit.js"></script>
+<!--s3:seo-->
+<link rel="canonical" href="https://s3eidat.github.io/tasbih-counter/">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0d0f12">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="S3eidat Tools">
+<meta property="og:url" content="https://s3eidat.github.io/tasbih-counter/">
+<meta property="og:image" content="https://s3eidat.github.io/tasbih-counter/screenshot.png">
+<meta property="og:image:width" content="1280"><meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tasbih Counter — A simple digital tasbih counter">
+<meta name="twitter:description" content="A simple digital tasbih counter. Free, private and runs 100% in your browser: no sign-up, no uploads.">
+<meta name="twitter:image" content="https://s3eidat.github.io/tasbih-counter/screenshot.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Tasbih Counter", "url": "https://s3eidat.github.io/tasbih-counter/", "description": "A simple digital tasbih counter. Free, private and runs 100% in your browser: no sign-up, no uploads.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "image": "https://s3eidat.github.io/tasbih-counter/screenshot.png", "author": {"@type": "Person", "name": "s3eidat", "url": "https://github.com/s3eidat"}}</script>
+<!--/s3:seo-->
+</head>
+<body data-tool="tasbih-counter">
+<main class="s3-main">
+  <section class="s3-hero">
+    <h1>Tasbih Counter <span class="tb-ar-h" lang="ar" dir="rtl">المسبحة الإلكترونية</span></h1>
+    <p>Tap the circle, or press <kbd>Space</kbd> / <kbd>Enter</kbd>, to count. Set a target and feel a gentle vibration when you reach it. Your counters stay on this device.</p>
+  </section>
+
+  <div class="tb-grid">
+    <section class="card tb-main">
+      <div class="tb-dhikr" id="dhikr">
+        <p class="tb-ar" id="d-ar" lang="ar" dir="rtl"></p>
+        <p class="tb-tr" id="d-tr"></p>
+        <p class="tb-mean faint" id="d-mean"></p>
+      </div>
+
+      <button class="tb-tap" id="tap" type="button" aria-describedby="tap-help">
+        <svg class="tb-ring" viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="tb-ring-bg" cx="60" cy="60" r="54"/>
+          <circle class="tb-ring-fg" id="ring" cx="60" cy="60" r="54"/>
+        </svg>
+        <span class="tb-count" id="count">0</span>
+        <span class="tb-of" id="of"></span>
+        <span class="tb-round" id="round"></span>
+      </button>
+      <p class="sr" id="tap-help">Adds one to the count</p>
+
+      <div class="row tb-ctrl">
+        <button class="btn" id="undo" title="Remove one (Backspace)">Undo <span lang="ar" class="tb-sub">تراجع</span></button>
+        <button class="btn" id="reset"><svg class="i"><use href="#i-refresh"/></svg><span id="reset-l">Reset <span lang="ar" class="tb-sub">تصفير</span></span></button>
+      </div>
+
+      <div class="stack tb-set">
+        <div class="row">
+          <span class="faint tb-lbl">Target <span lang="ar">· العدد</span></span>
+          <div class="seg" id="target" role="group" aria-label="Target">
+            <button data-v="33" aria-pressed="false">33</button>
+            <button data-v="99" aria-pressed="false">99</button>
+            <button data-v="100" aria-pressed="false">100</button>
+            <button data-v="0" aria-pressed="false" aria-label="No target">∞</button>
+          </div>
+          <label class="tb-custom"><span class="sr">Custom target</span><input class="input" id="custom" inputmode="numeric" autocomplete="off" placeholder="Custom"></label>
+        </div>
+        <div class="row tb-toggles">
+          <label class="check"><input type="checkbox" id="vib"> <span>Vibrate at target <bdi lang="ar" class="tb-sub">اهتزاز عند الوصول</bdi></span></label>
+          <label class="check"><input type="checkbox" id="tick"> <span>Tiny buzz each tap <bdi lang="ar" class="tb-sub">اهتزاز خفيف</bdi></span></label>
+          <button class="btn small ghost" id="wake" aria-pressed="false"><span id="wake-l">Keep screen on</span> <span lang="ar" class="tb-sub">· إبقاء الشاشة</span></button>
+        </div>
+        <p class="faint tb-hint" id="hint"></p>
+      </div>
+    </section>
+
+    <div class="tb-side">
+      <section class="card">
+        <div class="row between">
+          <h2>My counters <small lang="ar">عدّاداتي</small></h2>
+          <button class="btn small" id="add"><svg class="i"><use href="#i-plus"/></svg>New <span lang="ar" class="tb-sub">جديد</span></button>
+        </div>
+        <div class="tb-list mt" id="list"></div>
+        <div class="tb-new mt" id="new" hidden>
+          <label class="field">Your own dhikr <span class="tb-sub" lang="ar">ذكر من اختيارك</span>
+            <input class="input" id="own" dir="auto" lang="ar" autocomplete="off" placeholder="اكتب الذكر هنا">
+          </label>
+          <div class="row mt"><button class="btn small primary" id="own-add">Add</button><button class="btn small ghost" id="new-close">Cancel</button></div>
+          <p class="faint tb-or">or pick one <span lang="ar">· أو اختر من القائمة</span></p>
+          <div class="tb-presets" id="presets"></div>
+        </div>
+      </section>
+
+      <section class="card mt">
+        <div class="row between">
+          <h2>Daily totals <small lang="ar">المجموع اليومي</small></h2>
+          <div class="row">
+            <button class="btn small ghost" id="h-csv"><svg class="i"><use href="#i-download"/></svg>CSV</button>
+            <button class="btn small ghost" id="h-clear"><svg class="i"><use href="#i-trash"/></svg><span id="h-clear-l">Clear</span></button>
+          </div>
+        </div>
+        <div class="stats mt" id="h-stats"></div>
+        <div class="tb-bars mt" id="bars" aria-label="Last 14 days"></div>
+      </section>
+    </div>
+  </div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
